@@ -10,10 +10,7 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         ZStack {
-            LinearGradient(colors: [.blue, Color("lightBlue")],
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+            BackgroundView(topColor: .blue, bottomColor: Color("lightBlue"))
             VStack {
                 CityNameView(cityName: "Mogi Mirim", stateName: "SP")
                 TemperatureTodayView()
@@ -24,7 +21,12 @@ struct ContentView: View {
                     DaysView(day: "FRI", temperature: "60°", iconName: "sunset.fill")
                     DaysView(day: "SAT", temperature: "55°", iconName: "moon.stars.fill")
                 }.padding(.top, 20)
-                
+                Spacer()
+                Button {
+                    print("tapped")
+                } label: {
+                    WeatherButton(buttonText: "Change day time", textColor: .blue, backgroundColor: .white)
+                }
                 Spacer()
             }
         }
@@ -68,7 +70,7 @@ struct DaysView: View {
                     .renderingMode(.original)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 55, height: 55)
+                    .frame(width: 45, height: 45)
                 Text(temperature)
                     .font(.system(size: 24, weight: .medium, design: .default))
                     .foregroundStyle(.white)
@@ -90,5 +92,17 @@ struct TemperatureTodayView: View {
                               design: .default))
                 .foregroundStyle(.white)
         }
+    }
+}
+
+struct BackgroundView: View {
+    var topColor: Color
+    var bottomColor: Color
+    var body: some View {
+        
+        LinearGradient(colors: [topColor, bottomColor],
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
     }
 }
