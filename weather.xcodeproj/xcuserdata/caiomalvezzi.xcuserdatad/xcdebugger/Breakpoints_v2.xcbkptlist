@@ -14,8 +14,8 @@
             filePath = "weather/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "DaysView"
             landmarkType = "14">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "weather/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "54"
-            endingLineNumber = "54"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "CityNameView"
             landmarkType = "14">
          </BreakpointContent>

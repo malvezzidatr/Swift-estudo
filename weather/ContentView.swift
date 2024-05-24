@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isNight = false
+    @State private var weatherData: WeatherData?
+    @State private var forecastData: Forecast?
+    @State private var errorMessage: String?
     
     struct DayData {
         let day: String
@@ -24,12 +27,37 @@ struct ContentView: View {
         DayData(day: "SAT", temperature: "55°", iconName: "moon.stars.fill"),
     ]
     
+    func fetchWeather() {
+        let weatherService = WeatherService()
+        weatherService.getWeather(for: "Salvador") { data in
+            DispatchQueue.main.async {
+                if let data = data {
+                    print(data)
+                    self.weatherData = data
+                } else {
+                    self.errorMessage = "Não foi possível carregar os dados do tempo."
+                }
+            }
+        }
+        weatherService.getForecast(for: "Mogi Mirim") {
+            data in
+            DispatchQueue.main.async {
+                if let data = data {
+                    print(data)
+                    self.forecastData = data
+                } else {
+                    self.errorMessage = "Não foi possível carregar os dados dos próximos dias"
+                }
+            }
+        }
+    }
+    
     var body: some View {
         ZStack {
             BackgroundView(isNight: $isNight)
             VStack {
-                CityNameView(cityName: "Mogi Mirim", stateName: "SP")
-                TemperatureTodayView(icon: isNight ? "moon.stars.fill" : "cloud.sun.fill")
+                CityNameView(cityName: weatherData?.location.name ?? "", stateName: weatherData?.location.region ?? "")
+                TemperatureTodayView(icon: isNight ? "moon.stars.fill" : "cloud.sun.fill", temperature: weatherData?.current.temp_c ?? 0)
                 HStack() {
                     ForEach(daysData, id: \.day) {
                         day in DaysView(day: day.day, temperature: day.temperature, iconName: day.iconName)
@@ -43,6 +71,9 @@ struct ContentView: View {
                 }
                 Spacer()
             }
+        }.onAppear {
+            fetchWeather()
+            
         }
     }
 }
@@ -94,6 +125,11 @@ struct DaysView: View {
 
 struct TemperatureTodayView: View {
     var icon: String
+    var temperature: Double = 0.0
+    var formattedTemperature: String {
+        return String(format: "%.1f°", temperature)
+    }
+    
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: icon)
@@ -101,7 +137,7 @@ struct TemperatureTodayView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
-            Text("76°")
+            Text(formattedTemperature)
                 .font(.system(size: 70,
                               weight: .medium,
                               design: .default))
