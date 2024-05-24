@@ -10,6 +10,20 @@ import SwiftUI
 struct ContentView: View {
     @State private var isNight = false
     
+    struct DayData {
+        let day: String
+        let temperature: String
+        let iconName: String
+    }
+    
+    let daysData: [DayData] = [
+        DayData(day: "TUE", temperature: "74°", iconName: "cloud.sun.fill"),
+        DayData(day: "WED", temperature: "70°", iconName: "sun.max.fill"),
+        DayData(day: "THU", temperature: "66°", iconName: "wind"),
+        DayData(day: "FRI", temperature: "60°", iconName: "sunset.fill"),
+        DayData(day: "SAT", temperature: "55°", iconName: "moon.stars.fill"),
+    ]
+    
     var body: some View {
         ZStack {
             BackgroundView(isNight: $isNight)
@@ -17,11 +31,9 @@ struct ContentView: View {
                 CityNameView(cityName: "Mogi Mirim", stateName: "SP")
                 TemperatureTodayView(icon: isNight ? "moon.stars.fill" : "cloud.sun.fill")
                 HStack() {
-                    DaysView(day: "TUE", temperature: "74°", iconName: "cloud.sun.fill")
-                    DaysView(day: "WED", temperature: "70°", iconName: "sun.max.fill")
-                    DaysView(day: "THU", temperature: "66°", iconName: "wind")
-                    DaysView(day: "FRI", temperature: "60°", iconName: "sunset.fill")
-                    DaysView(day: "SAT", temperature: "55°", iconName: "moon.stars.fill")
+                    ForEach(daysData, id: \.day) {
+                        day in DaysView(day: day.day, temperature: day.temperature, iconName: day.iconName)
+                    }
                 }.padding(.top, 20)
                 Spacer()
                 Button {
