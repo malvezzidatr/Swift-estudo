@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isNight = false
+    @State private var cityName: String = ""
     @State private var weatherData: WeatherData?
     @State private var forecastData: Forecast?
     @State private var errorMessage: String?
@@ -27,9 +28,9 @@ struct ContentView: View {
         DayData(day: "SAT", temperature: "55°", iconName: "moon.stars.fill"),
     ]
     
-    func fetchWeather() {
+    func fetchWeather(for city: String) {
         let weatherService = WeatherService()
-        weatherService.getWeather(for: "Salvador") { data in
+        weatherService.getWeather(for: city) { data in
             DispatchQueue.main.async {
                 if let data = data {
                     print(data)
@@ -56,6 +57,11 @@ struct ContentView: View {
         ZStack {
             BackgroundView(isNight: $isNight)
             VStack {
+                TextField("Enter city name", text: $cityName, onCommit: {
+                    fetchWeather(for: cityName)
+                })
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
                 CityNameView(cityName: weatherData?.location.name ?? "", stateName: weatherData?.location.region ?? "")
                 TemperatureTodayView(icon: isNight ? "moon.stars.fill" : "cloud.sun.fill", temperature: weatherData?.current.temp_c ?? 0)
                 HStack() {
@@ -72,8 +78,7 @@ struct ContentView: View {
                 Spacer()
             }
         }.onAppear {
-            fetchWeather()
-            
+            fetchWeather(for: "Mogi Mirim")
         }
     }
 }
